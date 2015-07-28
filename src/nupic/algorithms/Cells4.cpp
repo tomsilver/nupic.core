@@ -2523,6 +2523,19 @@ Cells4::chooseCellsToLearnFrom(UInt cellIdx, UInt segIdx,
                                UInt nSynToAdd, CStateIndexed& state,
                                std::vector<UInt>& srcCells)
 {
+
+  bool scream = false;
+  if (_nLrnIterations == 36 && (cellIdx == 40963 && segIdx == 0)) {
+    scream = true;
+  }
+
+  if (scream) {
+        std::cout << "choosing " << std::to_string(nSynToAdd) << " cells to learn on\n";
+      std::cout << "iteration is " << std::to_string(_nLrnIterations);
+      std::cout << " cell is " << std::to_string(cellIdx);
+      std::cout << " seg is " << std::to_string(segIdx) << "\n";
+  }
+
   // bail out if no cells requested
   if (nSynToAdd == 0)
     return;
@@ -2531,6 +2544,11 @@ Cells4::chooseCellsToLearnFrom(UInt cellIdx, UInt segIdx,
   // start with a sorted vector of all the cells that are on in the current state
   static std::vector<UInt> vecCellBuffer;
   vecCellBuffer = state.cellsOn(true);
+
+  if (scream) {
+    std::cout << "printing vecCellBuffer \n";
+    std::copy(vecCellBuffer.begin(), vecCellBuffer.end(), std::ostream_iterator<UInt>(std::cout, " "));
+  }
 
   // remove any cells already in this segment
   static std::vector<UInt> vecPruned;
@@ -2545,6 +2563,12 @@ Cells4::chooseCellsToLearnFrom(UInt cellIdx, UInt segIdx,
     for (UInt i = 0; i != segThis.size(); ++i)
       vecAlreadyHave.push_back(segThis[i].srcCellIdx());
 
+
+    if (scream) {
+      std::cout << "\nprinting vecAlreadyHave \n";
+      std::copy(vecAlreadyHave.begin(), vecAlreadyHave.end(), std::ostream_iterator<UInt>(std::cout, " "));
+    }
+
     // remove any of these found in vecCellBuffer
     if (vecPruned.size() < vecCellBuffer.size())   // ensure there is enough room for the results
       vecPruned.resize(vecCellBuffer.size());
@@ -2554,7 +2578,17 @@ Cells4::chooseCellsToLearnFrom(UInt cellIdx, UInt segIdx,
                                      vecAlreadyHave.begin(),
                                      vecAlreadyHave.end(),
                                      vecPruned.begin());
+
+    if (scream) {
+      std::cout << "\niterPruned-vecPruned is " << std::to_string(iterPruned-vecPruned.begin()) << "\n";
+    }
+
     vecPruned.resize(iterPruned - vecPruned.begin());
+
+    if (scream) {
+      std::cout << "printing vecPruned \n";
+      std::copy(vecPruned.begin(), vecPruned.end(), std::ostream_iterator<UInt>(std::cout, " "));
+    }
   }
   else {
     vecPruned = vecCellBuffer;
@@ -2587,9 +2621,19 @@ Cells4::chooseCellsToLearnFrom(UInt cellIdx, UInt segIdx,
     // choose a random subset of the cells found, and append them to the
     // caller's array
     UInt start = srcCells.size();
+
+    if (scream) {
+      std::cout << "\nstart is " << std::to_string(start) << "\n";
+    }
+
     srcCells.resize(srcCells.size() + nSynToAdd);
     _rng.sample(&vecPruned.front(), vecPruned.size(),
                 &srcCells[start], nSynToAdd);
+
+    if (scream) {
+      std::cout << "printing srcCells \n";
+      std::copy(srcCells.begin(), srcCells.end(), std::ostream_iterator<UInt>(std::cout, " "));
+    }
 
     fSortNeeded = true;
   }
