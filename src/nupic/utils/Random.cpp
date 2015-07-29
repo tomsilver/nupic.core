@@ -29,6 +29,8 @@
 #include <cmath> // For ldexp.
 #include <iostream> // for istream, ostream
 
+#include <limits.h>
+
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 #include <kj/std/iostream.h>
@@ -267,9 +269,17 @@ UInt32 RandomImpl::getUInt32(void)
 #ifdef RANDOM_SUPERDEBUG
   printf("Random::get *fptr = %ld; *rptr = %ld fptr = %ld rptr = %ld\n", state_[fptr_], state_[rptr_], fptr_, rptr_);
 #endif
-  std::cout << "state[" << std::to_string(fptr_);
-  std::cout << "] is now " << std::to_string(state_[fptr_]) << "\n";
-  state_[fptr_] += state_[rptr_];
+  if (INT_MAX - state_[fptr_] < state_[rptr_]) {
+    std::cout << "THIS IS HAPPENING HANNAH IS CURIOUS\n";
+    state_[fptr_] = 0;
+  }
+  else if (INT_MIN - state_[fptr_] > state_[rptr_]) {
+    std::cout << "THIS IS HAPPENING HANNAH IS CURIOUS 2\n";
+    state_[fptr_] = 0;
+  }
+  else {
+    state_[fptr_] += state_[rptr_];
+  }
   i = state_[fptr_];
   i = (i >> 1) & 0x7fffffff;	/* chucking least random bit */
   if (++fptr_ >= stateSize_) {
@@ -307,10 +317,6 @@ RandomImpl::RandomImpl(UInt64 seed)
     ldiv_t val = ldiv(state_[i-1], 127773);
     long test = 16807 * val.rem - 2836 * val.quot;
     state_[i] = test + (test < 0 ? 2147483647 : 0);
-
-    std::cout << "initialized state_[" << std::to_string(i);
-    std::cout << "] to " << std::to_string(state_[i]) << "\n";
-
   }
   fptr_ = sep_;
   rptr_ = 0;
