@@ -271,11 +271,11 @@ UInt32 RandomImpl::getUInt32(void)
 #endif
   if (INT_MAX - state_[fptr_] < state_[rptr_]) {
     std::cout << "THIS IS HAPPENING HANNAH IS CURIOUS\n";
-    state_[fptr_] = 0;
+    state_[fptr_] = 1;
   }
   else if (INT_MIN - state_[fptr_] > state_[rptr_]) {
     std::cout << "THIS IS HAPPENING HANNAH IS CURIOUS 2\n";
-    state_[fptr_] = 0;
+    state_[fptr_] = 1;
   }
   else {
     state_[fptr_] += state_[rptr_];
