@@ -267,6 +267,8 @@ UInt32 RandomImpl::getUInt32(void)
 #ifdef RANDOM_SUPERDEBUG
   printf("Random::get *fptr = %ld; *rptr = %ld fptr = %ld rptr = %ld\n", state_[fptr_], state_[rptr_], fptr_, rptr_);
 #endif
+  std::cout << "state[" << std::to_string(fptr_);
+  std::cout << "] is now " << std::to_string(state_[fptr_]) << "\n";
   state_[fptr_] += state_[rptr_];
   i = state_[fptr_];
   i = (i >> 1) & 0x7fffffff;	/* chucking least random bit */
