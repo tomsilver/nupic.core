@@ -269,11 +269,11 @@ UInt32 RandomImpl::getUInt32(void)
 #ifdef RANDOM_SUPERDEBUG
   printf("Random::get *fptr = %ld; *rptr = %ld fptr = %ld rptr = %ld\n", state_[fptr_], state_[rptr_], fptr_, rptr_);
 #endif
-  if (INT_MAX - (state_[fptr_] & 0x7fffffff) < state_[rptr_]) {
+  if (INT_MAX - state_[fptr_] < state_[rptr_]) {
     std::cout << "THIS IS HAPPENING UHOH\n";
     state_[fptr_] = 12345;
   }
-  else if ((state_[fptr_] & 0x7fffffff) < 0 && INT_MIN - (state_[fptr_] & 0x7fffffff) > state_[rptr_]) {
+  else if (state_[fptr_] < 0 && INT_MIN - state_[fptr_] > state_[rptr_]) {
     std::cout << "THIS IS HAPPENING UHOH 2\n";
     state_[fptr_] = 12345;
   }
@@ -305,19 +305,23 @@ RandomImpl::RandomImpl(UInt64 seed)
   /**
    * Initialize our state. Taken from BSD source for random()
    */
-  state_[0] = (int)seed;
-  for (long i = 1; i < stateSize_; i++) {
-    /*
-     * Implement the following, without overflowing 31 bits:
-     *
-     *	state[i] = (16807 * state[i - 1]) % 2147483647;
-     *
-     *	2^31-1 (prime) = 2147483647 = 127773*16807+2836
-     */
-    ldiv_t val = ldiv(state_[i-1], 127773);
-    long test = 16807 * val.rem - 2836 * val.quot;
-    state_[i] = test + (test < 0 ? 2147483647 : 0);
+  // state_[0] = (int)seed;
+  // for (long i = 1; i < stateSize_; i++) {
+
+  //    * Implement the following, without overflowing 31 bits:
+  //    *
+  //    *	state[i] = (16807 * state[i - 1]) % 2147483647;
+  //    *
+  //    *	2^31-1 (prime) = 2147483647 = 127773*16807+2836
+
+  //   ldiv_t val = ldiv(state_[i-1], 127773);
+  //   long test = 16807 * val.rem - 2836 * val.quot;
+  //   state_[i] = test + (test < 0 ? 2147483647 : 0);
+  // }
+  for (int i = 0; i < stateSize_; i++) {
+    state_[i] = 12345;
   }
+
   fptr_ = sep_;
   rptr_ = 0;
 #ifdef RANDOM_SUPERDEBUG
