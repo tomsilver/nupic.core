@@ -270,12 +270,12 @@ UInt32 RandomImpl::getUInt32(void)
   printf("Random::get *fptr = %ld; *rptr = %ld fptr = %ld rptr = %ld\n", state_[fptr_], state_[rptr_], fptr_, rptr_);
 #endif
   if (INT_MAX - state_[fptr_] < state_[rptr_]) {
-    std::cout << "THIS IS HAPPENING HANNAH IS CURIOUS\n";
-    state_[fptr_] = 1;
+    std::cout << "THIS IS HAPPENING UHOH\n";
+    state_[fptr_] = 12345;
   }
-  else if (INT_MIN - state_[fptr_] > state_[rptr_]) {
-    std::cout << "THIS IS HAPPENING HANNAH IS CURIOUS 2\n";
-    state_[fptr_] = 1;
+  else if (state_[fptr_] < 0 && INT_MIN - state_[fptr_] > state_[rptr_]) {
+    std::cout << "THIS IS HAPPENING UHOH 2\n";
+    state_[fptr_] = 12345;
   }
   else {
     state_[fptr_] += state_[rptr_];
