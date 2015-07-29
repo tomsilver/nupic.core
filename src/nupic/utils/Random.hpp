@@ -128,10 +128,8 @@ namespace nupic {
       UInt32 nextChoice = 0;
       for (UInt32 i = 0; i < nPopulation; ++i)
       {
-        UInt32 rando = getUInt32(nPopulation - i);
-        if (rando < (nChoices - nextChoice))
+        if (getUInt32(nPopulation - i) < (nChoices - nextChoice))
         {
-          std::cout << "rando: " << std::to_string(rando) << "\n";
           choices[nextChoice] = population[i];
           ++nextChoice;
           if (nextChoice == nChoices)

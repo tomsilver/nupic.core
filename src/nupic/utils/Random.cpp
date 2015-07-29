@@ -305,6 +305,10 @@ RandomImpl::RandomImpl(UInt64 seed)
     ldiv_t val = ldiv(state_[i-1], 127773);
     long test = 16807 * val.rem - 2836 * val.quot;
     state_[i] = test + (test < 0 ? 2147483647 : 0);
+
+    std::cout << "initialized state_[" << std::to_string(i);
+    std::cout << "] to " << std::to_string(state_[i]) << "\n";
+
   }
   fptr_ = sep_;
   rptr_ = 0;
