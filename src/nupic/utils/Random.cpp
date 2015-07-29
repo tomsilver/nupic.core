@@ -269,11 +269,11 @@ UInt32 RandomImpl::getUInt32(void)
 #ifdef RANDOM_SUPERDEBUG
   printf("Random::get *fptr = %ld; *rptr = %ld fptr = %ld rptr = %ld\n", state_[fptr_], state_[rptr_], fptr_, rptr_);
 #endif
-  if (INT_MAX - state_[fptr_] < state_[rptr_]) {
+  if (INT_MAX - (state_[fptr_] & 0x7fffffff) < state_[rptr_]) {
     std::cout << "THIS IS HAPPENING UHOH\n";
     state_[fptr_] = 12345;
   }
-  else if (state_[fptr_] < 0 && INT_MIN - state_[fptr_] > state_[rptr_]) {
+  else if ((state_[fptr_] & 0x7fffffff) < 0 && INT_MIN - (state_[fptr_] & 0x7fffffff) > state_[rptr_]) {
     std::cout << "THIS IS HAPPENING UHOH 2\n";
     state_[fptr_] = 12345;
   }
