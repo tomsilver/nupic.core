@@ -2627,6 +2627,11 @@ Cells4::chooseCellsToLearnFrom(UInt cellIdx, UInt segIdx,
     }
 
     srcCells.resize(srcCells.size() + nSynToAdd);
+
+    if (scream) {
+      std::cout << "vecPruned size is now " << std::to_string(vecPruned.size()) << "\n";
+    }
+
     _rng.sample(&vecPruned.front(), vecPruned.size(),
                 &srcCells[start], nSynToAdd);
 
